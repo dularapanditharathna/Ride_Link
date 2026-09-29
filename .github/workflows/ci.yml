@@ -1,0 +1,22 @@
+name: RideLink CI
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [account-service, driver-vehicle-service, ride-management-service, fare-payment-service]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Test and package ${{ matrix.service }}
+        working-directory: ${{ matrix.service }}
+        run: mvn --batch-mode clean package
+
